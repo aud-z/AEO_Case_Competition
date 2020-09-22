@@ -11,7 +11,10 @@ NOTE: RUN INITIAL_EXPLORATION.PY FIRST
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.figure
 import seaborn as sns
+
+#%%
 
 """
 plot monthly sales trendlines
@@ -87,3 +90,35 @@ ax.set_title('Correlation Matrix')
 # Draw the heatmap with the mask and correct aspect ratio
 sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0,
             square=True, linewidths=1, cbar_kws={"shrink": .5})
+
+#%%
+
+"""create median spending chart by loyalty type"""
+
+# first create summary spending table with median spending information 
+sum_spend=pd.DataFrame(np.zeros([3,3]), columns=['category', 'tot_net_sls', 'tot_ae_sls'])
+#%%
+
+# columns in order are: category, total net sales, and total AE sales
+sum_spend.iloc[0, 0]='neither'
+sum_spend.iloc[0, 1]=np.median(summary_data[(summary_data['isCust_Loyalty']!=1) & (summary_data['isCust_AECredit']!=1)]['TOT_NET_SLS_AMT'])
+sum_spend.iloc[0, 2]=np.median(summary_data[(summary_data['isCust_Loyalty']!=1) & (summary_data['isCust_AECredit']!=1)]['AER_NET_SLS_AMT'])
+sum_spend.iloc[1, 0]='loyalty'
+sum_spend.iloc[1, 1]=np.median(summary_data[summary_data['isCust_Loyalty']==1]['TOT_NET_SLS_AMT'])
+sum_spend.iloc[1, 2]=np.median(summary_data[summary_data['isCust_Loyalty']==1]['AER_NET_SLS_AMT'])
+sum_spend.iloc[2, 0]='ae credit'
+sum_spend.iloc[2, 1]=np.median(summary_data[summary_data['isCust_AECredit']==1]['TOT_NET_SLS_AMT'])
+sum_spend.iloc[2, 2]=np.median(summary_data[summary_data['isCust_AECredit']==1]['AER_NET_SLS_AMT'])
+
+
+#%%
+
+fig=sum_spend.plot(x='category', y=['tot_net_sls', 'tot_ae_sls'], kind='bar')
+fig.set_xlabel('loyalty program category')
+plt.ylim(0, 75)
+fig.set_ylabel('median spending $')
+fig.legend(['total net sales', 'total AE net sales'])
+fig.set_title('Median Spending by Loyalty Program')
+for p in fig.patches:
+    fig.annotate(str(p.get_height()), (p.get_x()*1.025, p.get_height()*1.015), fontsize=8)
+plt.show()

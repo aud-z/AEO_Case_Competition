@@ -111,9 +111,10 @@ summary_data=aeo_data[[col for col in list(aeo_data.columns) if '_p' not in col 
 summary_data=summary_data.merge(customer_activity[['MASKED_CUST_NBR', 'tot_mo', 'tot_active_mo']])
 
 #%% 
+
 summary_data['channel']=0
 
-summary_data[summary_data['AER_acquisition_channel']=='ONLINE']['channel']=1
+summary_data['channel']=np.where(summary_data['AER_acquisition_channel']=='ONLINE', 1, 0)
 
 brand_dummy=pd.get_dummies(summary_data['STORE_BRAND_CD'])
 
@@ -125,6 +126,6 @@ summary_data=pd.concat([summary_data, brand_dummy, store_dummy], axis=1)
 summary_data=summary_data.drop(['MASKED_CUST_NBR', 'CAMPAIGN_PARTNER_NBR', 'AER_acq_dt', 'AER_acquisition_channel', 'STORE_BRAND_CD', 'STORE_FORMAT_CD', 'MALL_TYP_DESC', 'CAMPAIGN_CATEGORY', 'CAMPAIGN_CHANNEL'], axis=1)
 
 
- #%%
+#%%
  
  
