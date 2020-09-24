@@ -122,3 +122,17 @@ fig.set_title('Median Spending by Loyalty Program')
 for p in fig.patches:
     fig.annotate(str(p.get_height()), (p.get_x()*1.025, p.get_height()*1.015), fontsize=8)
 plt.show()
+
+#%%
+
+ax = sns.boxplot(x='isAE_migration', y="AER_NET_SLS_AMT", data=aeo_data)
+
+ax=sns.boxplot(x='isCust_AECredit', y="AER_NET_SLS_AMT", data=aeo_data)
+
+#%%
+
+#plt.hist(aeo_data[aeo_data['isAE_migration']==1]['AER_NET_SLS_AMT'], bins=60, alpha=0.5, label='x')
+#plt.hist(aeo_data[aeo_data['isAE_migration']==0]['AER_NET_SLS_AMT'], bins=60, alpha=0.5, label='x')
+#pyplot.legend(loc='upper right') 
+plt.xlim(0,500)
+plt.show()
