@@ -20,6 +20,41 @@ import seaborn as sns
 #%%
 aeo_data=pd.read_csv(r"C:\Users\audre\OneDrive\Documents\CMU\Fall_2020\AEO_Case\comp_data\AEO_combined_copy.csv")
 
+
+
+#%%
+
+# take a look at where customers are coming from, and how many are new 
+
+print(pd.crosstab(aeo_data.isAE_migration, aeo_data.AER_acquisition_channel, normalize='columns'))
+
+
+#%%
+
+# analyze net sales by isAE_migration category
+print(aeo_data[['isAE_migration', 'cum_NET_SLS_AMT']].groupby('isAE_migration').describe().unstack(1))
+
+
+#%%
+
+# analyze net sales by campaign channel
+print('cumulative aerie net sales by campaign category: ')
+print(aeo_data[['CAMPAIGN_CATEGORY', 'cum_AER_NET_SLS_AMT']].groupby('CAMPAIGN_CATEGORY').sum())
+
+#%%
+print('get counts of new customers by campaign channel')
+print(pd.crosstab(aeo_data.isAE_migration, aeo_data.CAMPAIGN_CATEGORY).unstack(1))
+
+
+#%%
+
+# next, take a look at the AE credit card sales
+
+print(aeo_data[aeo_data['isCust_AECredit']==1]['cum_AER_NET_SLS_AMT'].sum()/aeo_data['cum_AER_NET_SLS_AMT'].sum())
+
+print(aeo_data[aeo_data['isCust_AECredit']==1]['cum_NET_SLS_AMT'].sum()/aeo_data['cum_NET_SLS_AMT'].sum())
+
+
 #%%
 
 # set up month index from 1 through 24
@@ -215,10 +250,6 @@ summary_data=pd.concat([summary_data, brand_dummy, store_dummy], axis=1)
 #%%
 
 summary_data=summary_data.drop(['MASKED_CUST_NBR', 'CAMPAIGN_PARTNER_NBR', 'AER_acq_dt', 'AER_acquisition_channel', 'STORE_BRAND_CD', 'STORE_FORMAT_CD', 'MALL_TYP_DESC', 'CAMPAIGN_CATEGORY', 'CAMPAIGN_CHANNEL'], axis=1)
-
-#%%
-
-
 
 #%%
 
